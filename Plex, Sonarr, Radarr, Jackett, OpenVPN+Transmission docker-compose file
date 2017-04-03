@@ -1,0 +1,89 @@
+# to run: docker-compose run
+#
+# Create a .evn file in the same folder as this file and change the variables.
+# MOUNT_POINT=/tmp/
+# VPN_PROVIDER=changeme
+# VPN_CONFIG=changeme
+# VPN_USERNAME=changeme
+# VPN_PASSWORD=changeme
+#
+#
+version: "2"
+
+services:
+  transmission:
+    image: haugene/transmission-openvpn
+    container_name: transmission-openvpn
+    restart: always
+    ports:
+      - "9091:9091"
+    networks:
+      - plexnet
+    environment:
+      - OPENVPN_PROVIDER=${VPN_PROVIDER}
+      - OPENVPN_CONFIG=${VPN_CONFIG}
+      - OPENVPN_USERNAME=${VPN_USERNAME}
+      - OPENVPN_PASSWORD=${VPN_PASSWORD}
+      - OPENVPN_OPTS="--inactive 3600 --ping 10 --ping-exit 60"
+    volumes:
+      - ${MOUNT_POINT}/transmission:/data
+      - /etc/localtime:/etc/localtime:ro
+  radarr:
+    image: linuxserver/radarr
+    container_name: radarr
+    restart: always
+    networks:
+      - plexnet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${MOUNT_POINT}/sonarr/config:/config
+      - ${MOUNT_POINT}/plex/tv:/tv
+      - ${MOUNT_POINT}/transmission/completed:/downloads
+  sonarr:
+    image: linuxserver/sonarr
+    container_name: sonarr
+    restart: always
+    networks:
+      - plexnet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${MOUNT_POINT}/radarr-config:/config
+      - ${MOUNT_POINT}/transmission/completed:/downloads
+      - ${MOUNT_POINT}/plex/movies:/movies
+  jackett:
+    image: linuxserver/jackett
+    container_name: jackett
+    restart: always
+    networks:
+      - plexnet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${MOUNT_POINT}/jackett/config:/config
+      - ${MOUNT_POINT}/jackett/downloads:/downloads
+    ports:
+      - "9117:9117"
+  plex:
+    image: timhaak/plex
+    container_name: plex
+    restart: always
+    networks:
+      - plexnet
+    environment:
+      - PGID=1000
+      - PUID=1000
+      - TZ=Europe/London
+    volumes:
+      - ${MOUNT_POINT}/plex-config:/config
+      - ${MOUNT_POINT}/plex:/data
+networks:
+  plexnet:
+    driver: bridge
