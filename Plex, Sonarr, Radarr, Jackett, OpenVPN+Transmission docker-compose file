@@ -79,6 +79,17 @@ services:
     image: timhaak/plex
     container_name: plex
     restart: always
+    ports:
+      - "32400:32400"
+      - "1900:1900"
+      - "3005:3005"
+      - "5353:5353"
+      - "8324:8324"
+      - "32410:32410"
+      - "32412:32412"
+      - "32413:32413"
+      - "32414:32414"
+      - "32469:32469"
     networks:
       - plexnet
     environment:
