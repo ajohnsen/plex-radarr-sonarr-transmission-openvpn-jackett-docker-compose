@@ -32,6 +32,8 @@ services:
     image: linuxserver/radarr
     container_name: radarr
     restart: always
+    ports:
+      - "7878:7878"
     networks:
       - plexnet
     environment:
@@ -46,6 +48,8 @@ services:
     image: linuxserver/sonarr
     container_name: sonarr
     restart: always
+    ports:
+      - "8989:8989"
     networks:
       - plexnet
     environment:
