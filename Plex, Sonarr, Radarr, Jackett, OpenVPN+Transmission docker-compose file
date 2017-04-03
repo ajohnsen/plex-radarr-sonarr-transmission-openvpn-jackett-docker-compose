@@ -41,9 +41,9 @@ services:
       - PUID=1000
       - TZ=Europe/London
     volumes:
-      - ${MOUNT_POINT}/sonarr/config:/config
-      - ${MOUNT_POINT}/plex/tv:/tv
+      - ${MOUNT_POINT}/radarr-config:/config
       - ${MOUNT_POINT}/transmission/completed:/downloads
+      - ${MOUNT_POINT}/plex/movies:/movies
   sonarr:
     image: linuxserver/sonarr
     container_name: sonarr
@@ -57,9 +57,9 @@ services:
       - PUID=1000
       - TZ=Europe/London
     volumes:
-      - ${MOUNT_POINT}/radarr-config:/config
+      - ${MOUNT_POINT}/sonarr/config:/config
+      - ${MOUNT_POINT}/plex/tv:/tv
       - ${MOUNT_POINT}/transmission/completed:/downloads
-      - ${MOUNT_POINT}/plex/movies:/movies
   jackett:
     image: linuxserver/jackett
     container_name: jackett
