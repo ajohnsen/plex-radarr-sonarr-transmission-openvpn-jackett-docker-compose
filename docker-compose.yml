@@ -1,6 +1,6 @@
 # to run: docker-compose run
 #
-# Create a .evn file in the same folder as this file and change the variables.
+# Create a .env file in the same folder as this file and change the variables.
 # MOUNT_POINT=/tmp/
 # VPN_PROVIDER=changeme
 # VPN_CONFIG=changeme
